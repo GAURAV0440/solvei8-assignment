@@ -66,3 +66,7 @@ sentence-transformers --------->>>>>>	To convert booking descriptions and querie
 faiss-cpu --------->>>>>>	For fast semantic search (nearest neighbor search)
 
 pycountry --------->>>>>>	To convert country codes like “FRA” to “France”
+
+
+
+![image](https://github.com/user-attachments/assets/91896a94-511c-4a80-8130-f26c19f5d8c7)
