@@ -39,10 +39,15 @@ No external APIs or keys used — everything runs locally
 # Folder Structure
 
 solvei8-assignment/
+
 ├── app.py                # Main backend code (Flask)
+
 ├── hotel_bookings.csv    # Dataset
+
 ├── project.ipynb         # Optional: EDA / trials
+
 ├── requirements.txt      # Python dependencies
+
 ├── templates/
 │   └── index.html        # Frontend code
 
