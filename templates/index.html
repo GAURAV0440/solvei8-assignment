@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hotel Booking Q&A + Analytics</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 700px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .response {
+      margin-top: 15px;
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 6px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 10px 0;
+    }
+    .insight-box {
+      background: #fff;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+    .insight-box strong {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏨 Hotel Booking Q&A + Analytics</h1>
+
+    <div class="card">
+      <h2>Ask a Booking Question</h2>
+      <input id="question" type="text" placeholder="e.g. Show me bookings from Portugal with 2 guests" />
+      <button onclick="askQuestion()">Submit Question</button>
+      <div id="askResult" class="response"></div>
+    </div>
+
+    <div class="card">
+      <h2>Get Analytics</h2>
+      <button onclick="getAnalytics()">View Insights</button>
+      <div id="analyticsResult" class="response"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentRows = null; // 🔹 for passing filtered data to analytics
+
+    async function askQuestion() {
+      const question = document.getElementById("question").value;
+      const resultDiv = document.getElementById("askResult");
+      resultDiv.innerHTML = "Loading...";
+
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
+      const data = await res.json();
+      currentRows = data.rows;
+
+      let formatted = data.matches.map(match => {
+        const status = match.includes("Cancelled") ? "❌ Cancelled" : "✅ Confirmed";
+        return `📌 ${match.replace(/Status: (✅ Confirmed|❌ Cancelled)/, `Status: ${status}`)}`;
+      }).join("<hr>");
+
+      resultDiv.innerHTML = formatted;
+    }
+
+    async function getAnalytics() {
+      const resultDiv = document.getElementById("analyticsResult");
+      resultDiv.innerHTML = "Loading...";
+
+      const res = await fetch("/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rows: currentRows }),
+      });
+
+      const data = await res.json();
+
+      const analyticsFormatted = `
+        <div class="insight-box">
+          <strong>📊 Avg Price:</strong> ₹${data.average_booking_price} |
+          <strong>Cancellation Rate:</strong> ${data.cancellation_rate}
+        </div>
+        <div class="insight-box">
+          <strong>🌍 Top Countries:</strong> ${Object.entries(data.top_booking_countries).map(([k, v]) => `${k} (${v})`).join(', ')}
+        </div>
+        <div class="insight-box">
+          <strong>💰 Top Revenue Months:</strong> ${Object.entries(data.top_revenue_months).map(([k, v]) => `${k} (₹${Math.round(v)})`).join(', ')}
+        </div>
+      `;
+
+      resultDiv.innerHTML = analyticsFormatted;
+    }
+  </script>
+</body>
+</html>
