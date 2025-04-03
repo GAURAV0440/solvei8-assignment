@@ -56,8 +56,13 @@ solvei8-assignment/
 # Libraries to Install
 
 flask --------->>>>>> For creating the backend API server
+
 pandas --------->>>>>>	For data cleaning, filtering, and analytics
+
 numpy --------->>>>>>	For array handling (used with embeddings)
+
 sentence-transformers --------->>>>>>	To convert booking descriptions and queries into embeddings
+
 faiss-cpu --------->>>>>>	For fast semantic search (nearest neighbor search)
+
 pycountry --------->>>>>>	To convert country codes like “FRA” to “France”
