@@ -68,14 +68,14 @@ def ask():
         raw = sample_rag.iloc[i]
         rows.append(raw.to_dict())  # Save raw row for contextual analytics
         country_full = get_country_name(raw["country"])
-        canceled = "❌ Cancelled" if raw["is_canceled"] else "✅ Confirmed"
+        canceled = " Cancelled" if raw["is_canceled"] else "Confirmed"
 
         # Create a human-friendly answer
         formatted = (
             f"{raw['hotel']} – {int(raw['total_guests'])} guests – {int(raw['total_nights'])} nights\n"
-            f"📍 Country: {country_full}  📅 Month: {raw['arrival_date_month']} {raw['arrival_date_year']}\n"
-            f"🗓️ Lead Time: {raw['lead_time']} days  💰 Price: ₹{raw['adr']}\n"
-            f"📌 Status: {canceled}"
+            f" Country: {country_full}  📅 Month: {raw['arrival_date_month']} {raw['arrival_date_year']}\n"
+            f" Lead Time: {raw['lead_time']} days  💰 Price: ₹{raw['adr']}\n"
+            f" Status: {canceled}"
         )
         results.append(formatted)
 
